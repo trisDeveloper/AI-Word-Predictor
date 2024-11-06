@@ -9,7 +9,9 @@ def greet(text):
 
 demo = gr.Interface(
     fn=greet,
-    inputs=gr.Textbox(label="Enter a sentence with a masked word ([MASK]):"),
+    inputs=gr.Textbox(
+        label="Enter a sentence with a word replaced by an underscore (_) and the app will predict possible words to complete the sentence."
+    ),
     outputs="text",
 )
 demo.launch()

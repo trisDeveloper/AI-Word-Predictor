@@ -5,10 +5,10 @@ from transformers import AutoTokenizer, TFBertForMaskedLM
 MODEL = "bert-base-uncased"
 
 
-def mask_word_prediction(text, K=5):
+def mask_word_prediction(text_with_, K=5):
     results = []
-
     tokenizer = AutoTokenizer.from_pretrained(MODEL)
+    text = text_with_.replace("_", tokenizer.mask_token)
     inputs = tokenizer(text, return_tensors="tf")
     mask_token_index = get_mask_token_index(tokenizer.mask_token_id, inputs)
     if mask_token_index is None:
