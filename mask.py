@@ -3,11 +3,12 @@ import tensorflow as tf
 from transformers import AutoTokenizer, TFBertForMaskedLM
 
 MODEL = "bert-base-uncased"
+tokenizer = AutoTokenizer.from_pretrained(MODEL)
+model = TFBertForMaskedLM.from_pretrained(MODEL)
 
 
-def mask_word_prediction(text_with_, K=5):
+def mask_word_prediction(text_with_, K=1):
     results = []
-    tokenizer = AutoTokenizer.from_pretrained(MODEL)
     text = text_with_.replace("_", tokenizer.mask_token)
     inputs = tokenizer(text, return_tensors="tf")
     mask_token_index = get_mask_token_index(tokenizer.mask_token_id, inputs)
@@ -15,7 +16,6 @@ def mask_word_prediction(text_with_, K=5):
         print(f"Input must include mask token {tokenizer.mask_token}.")
         return
 
-    model = TFBertForMaskedLM.from_pretrained(MODEL)
     mask_token_logits = model(**inputs).logits[0, mask_token_index]
     top_tokens = tf.math.top_k(mask_token_logits, K).indices.numpy()
     filtered_tokens = [
